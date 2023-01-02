@@ -1,7 +1,11 @@
 import supertest from "supertest";
 import app from "./server";
-import { MYSTERIOUS_ROBED_FIGURE } from "./constants/characters";
-import { CAVE_EXTERIOR } from "./constants/locations";
+import { HANDFORTH_PARISH_COUNCIL, CAVE_EXTERIOR } from "./constants/locations";
+import {
+  ADVENTURE_ADMIN,
+  MYSTERIOUS_ROBED_FIGURE,
+} from "./constants/characters";
+
 
 test("GET / responds with a welcome message from our mysterious robed figure", async () => {
   const response = await supertest(app).get("/");
@@ -56,8 +60,9 @@ test("GET /quest/decline responds with an apocalyptic message", async () => {
   expect(response.body.options).toStrictEqual({ restart: "/" });
 });
 
-test.skip("GET /quest/start/impossible responds with instant 'death'", async () => {
+test("GET /quest/start/impossible responds with instant 'death'", async () => {
   const response = await supertest(app).get("/quest/start/impossible");
+
 
   // there is _some_ location
   expect(response.body.location).toBeDefined();
@@ -73,3 +78,26 @@ test.skip("GET /quest/start/impossible responds with instant 'death'", async () 
   // includes option to restart
   expect(response.body.options).toMatchObject({ restart: "/" });
 });
+
+test("GET /quest/start/easy", async () => {
+  const response = await supertest(app).get("/quest/start/easy");
+  expect(response.body.location).toStrictEqual(HANDFORTH_PARISH_COUNCIL)
+})
+
+test("GET /quest/start/hard", async() => {
+  const response = await supertest(app).get("/quest/start/hard");
+expect(response.body.speech.speaker).toStrictEqual(ADVENTURE_ADMIN)
+
+})
+
+
+test("GET /help", async() => {
+const response = await supertest(app).get("/help");
+
+expect(response.body.location).toStrictEqual(HANDFORTH_PARISH_COUNCIL)
+expect(response.body.speech.speaker).toStrictEqual(ADVENTURE_ADMIN)
+expect(response.body.speech.text).toBe("This is the endpoint adventure! It's based on the classic 'choose your own adventure' books of ye olden 20th century times. When you visit an endpoint, you're presented with a scene and some text, and then you have a few options to choose from - your simulate turning to a new page by hitting a new endpoint.",
+)
+expect(response.body.options).toMatchObject({ backToStart: "/" });
+
+})

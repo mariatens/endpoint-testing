@@ -33,7 +33,7 @@ app.get("/help", (req, res) => {
     },
     options: {
       backToStart: "/",
-    },
+    }
   });
 });
 
@@ -52,6 +52,36 @@ app.get("/quest/accept", (req, res) => {
     },
   });
 });
+
+app.get("/quest/accept/easy", (req, res)=>{
+  res.json({
+    location: HANDFORTH_PARISH_COUNCIL
+  }
+  )
+})
+
+app.get("/quest/accept/hard", (req,res)=>{
+  res.json({
+    speech:{
+      speaker: ADVENTURE_ADMIN
+    } 
+  })
+})
+
+app.get("/quest/start/impossible", (req, res)=>{
+  res.json({
+    location: "SOMETHING", 
+    speech: {
+      speaker: {
+        name: "SOME NAME"
+      }, 
+      text: "fireball dragon excruciating"
+    },
+    options: {
+      restart: "/"
+    }
+
+})})
 
 app.get("/quest/decline", (req, res) => {
   res.json({
